@@ -1,4 +1,4 @@
-package m.woong.giphyapp
+package m.woong.giphyapp.ui
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -7,7 +7,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
+import m.woong.giphyapp.R
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +23,9 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_search, R.id.navigation_favorites
+                R.id.navigation_home,
+                R.id.navigation_search,
+                R.id.navigation_favorites
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -18,7 +18,7 @@ interface GiphyApi {
 
     companion object {
         const val API_KEY = "CAvlc5ArNMyF9U0dbm1XJ64TFS6DMsUB"
-        const val SUB_PATH_SEARCH = "/search"
-        const val SUB_PATH_TREND = "/trending"
+        const val SUB_PATH_SEARCH = "search"
+        const val SUB_PATH_TREND = "trending"
     }
 }

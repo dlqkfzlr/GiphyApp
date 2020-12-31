@@ -2,7 +2,9 @@ package m.woong.giphyapp
 
 import android.app.Application
 import android.content.Context
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class GiphyApp : Application() {
 
     override fun onCreate() {
