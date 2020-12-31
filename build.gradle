@@ -8,9 +8,9 @@ buildscript {
         app_compat_version = "1.2.0"
         recycler_version = "1.1.0"
         material_version = "1.2.1"
-        navigation_version = "2.3.1"
+        navigation_version = "2.3.2"
         constraint_layout_version = "2.0.4"
-        room_version = "2.2.5"
+        room_version = "2.2.6"
         retrofit_version = "2.9.0"
     }
 
