@@ -29,9 +29,9 @@ object DataModule {
             .baseUrl(BASE_URL)
             .client(
                 OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
+                /*.connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .cache(Cache(context.cacheDir, 10*1024*1024))
+                .cache(Cache(context.cacheDir, 10*1024*1024))*/
                 .build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
