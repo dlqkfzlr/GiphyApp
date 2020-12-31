@@ -4,7 +4,7 @@ import m.woong.giphyapp.data.source.remote.RemoteDataSourceImpl
 import m.woong.giphyapp.data.source.remote.model.RemoteSearchGiphyResponse
 import javax.inject.Inject
 
-class GiphyRepositoryimpl @Inject constructor(
+class GiphyRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSourceImpl
 ): BaseRepository(), GiphyRepository {
 

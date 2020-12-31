@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(ApplicationComponent::class)
 object DataModule {
 
-    private const val BASE_URL = "https://api.giphy.com/v1/gifs"
+    private const val BASE_URL = "https://api.giphy.com/v1/gifs/"
 
     @Singleton
     @Provides
