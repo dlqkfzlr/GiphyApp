@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -14,7 +15,6 @@ import m.woong.giphyapp.R
 import m.woong.giphyapp.databinding.FragmentSearchBinding
 import m.woong.giphyapp.ui.BaseFragment
 import m.woong.giphyapp.utils.showSnackbar
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment() {
@@ -36,28 +36,31 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.searchResponse.observe(viewLifecycleOwner,
-        Observer {
-            it.getContentIfNotHandled()?.let { response ->
-                Log.d(TAG, "개수: ${response.data.size}")
+        searchViewModel.searchClicked.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                hideSoftKeyboard(binding.etSearch)
             }
         })
 
-        searchViewModel.networkAvailable.observe(viewLifecycleOwner,
-        Observer {
-            it.getContentIfNotHandled()?.let { available ->
-                if (!available){
-                    binding.rootSearch.showSnackbar(resources.getString(R.string.network_not_available))
+        searchViewModel.searchResponse.observe(viewLifecycleOwner,
+            Observer {
+                it.getContentIfNotHandled()?.let { response ->
+                    Log.d(TAG, "개수: ${response.data.size}")
                 }
-            }
-        })
+            })
+
+        searchViewModel.networkAvailable.observe(viewLifecycleOwner,
+            Observer {
+                it.getContentIfNotHandled()?.let { available ->
+                    if (!available) {
+                        binding.rootSearch.showSnackbar(resources.getString(R.string.network_not_available))
+                    }
+                }
+            })
 
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                if (!v.text.isNullOrBlank()) {
-                    hideSoftKeyboard(binding.etSearch)
-                    searchViewModel.fetchSearchedGiphy(v.text.toString(), 0)
-                }
+                searchGiphy(binding.etSearch)
                 true
             } else {
                 false
@@ -65,7 +68,11 @@ class SearchFragment : BaseFragment() {
         }
     }
 
+    private fun searchGiphy(et: EditText) {
+        searchViewModel.searchGiphy()
+    }
+
     companion object {
-        val TAG = SearchFragment::class.java.simpleName
+        val TAG: String = SearchFragment::class.java.simpleName
     }
 }

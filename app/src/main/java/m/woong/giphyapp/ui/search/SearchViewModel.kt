@@ -16,6 +16,17 @@ class SearchViewModel @ViewModelInject constructor(
     private val giphyRepository: GiphyRepository
 ) : ViewModel() {
 
+    // two-way databinding
+    val queryData: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    private val _searchClicked: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+    val searchClicked: LiveData<Event<Boolean>>
+        get() = _searchClicked
+
     private val _searchResponse: MutableLiveData<Event<RemoteSearchGiphyResponse>> by lazy {
         MutableLiveData<Event<RemoteSearchGiphyResponse>>()
     }
@@ -28,10 +39,11 @@ class SearchViewModel @ViewModelInject constructor(
     val networkAvailable: LiveData<Event<Boolean>>
         get() = _networkAvailable
 
-    fun fetchSearchedGiphy(query: String, offset: Int) {
+    fun searchGiphy() {
+        _searchClicked.value = Event(true)
+        if (queryData.value.isNullOrBlank()) return
         viewModelScope.launch {
-            Log.d(SearchFragment.TAG, "query: $query")
-            val response = giphyRepository.requestToSearchGiphy(query, 10, offset)
+            val response = giphyRepository.requestToSearchGiphy(queryData.value.toString(), 10, 0)
             Log.d(SearchFragment.TAG, "response: $response")
 
             if (response is ResWrapper.Success) {
