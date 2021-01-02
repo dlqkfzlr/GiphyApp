@@ -12,6 +12,7 @@ buildscript {
         constraint_layout_version = "2.0.4"
         room_version = "2.2.6"
         retrofit_version = "2.9.0"
+        paging_version = "2.1.2"
     }
 
     repositories {
