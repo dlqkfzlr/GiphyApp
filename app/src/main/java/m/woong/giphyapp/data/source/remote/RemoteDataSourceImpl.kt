@@ -1,6 +1,6 @@
 package m.woong.giphyapp.data.source.remote
 
-import m.woong.giphyapp.data.network.GiphyApi
+import m.woong.giphyapp.api.GiphyApi
 import m.woong.giphyapp.data.source.remote.model.RemoteSearchGiphyResponse
 import javax.inject.Inject
 

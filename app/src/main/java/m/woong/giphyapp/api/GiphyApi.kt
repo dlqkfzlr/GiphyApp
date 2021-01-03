@@ -1,4 +1,4 @@
-package m.woong.giphyapp.data.network
+package m.woong.giphyapp.api
 
 import m.woong.giphyapp.data.source.remote.model.RemoteSearchGiphyResponse
 import retrofit2.http.GET
