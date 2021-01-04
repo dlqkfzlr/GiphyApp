@@ -1,7 +1,10 @@
 package m.woong.giphyapp.utils
 
 import android.view.View
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import m.woong.giphyapp.R
 
 
 /* Snackbar */
@@ -11,4 +14,15 @@ fun View.showSnackbar(msg: String) {
             sb.dismiss()
         }
     }.show()
+}
+
+/* ImageView */
+fun ImageView.showUrl(url: String) {
+    url.let {
+        Glide.with(this)
+            .load(url)
+            .centerCrop()
+            .error(R.drawable.ic_error_black_24dp)
+            .into(this)
+    }
 }
