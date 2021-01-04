@@ -12,8 +12,8 @@ interface GiphyApi {
         @Query("q") q: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
-        @Query("offset") rating: String = "g",
-        @Query("offset") lang: String = "en"
+        @Query("rating") rating: String = "g",
+        @Query("lang") lang: String = "en"
     ): RemoteSearchGiphyResponse
 
     companion object {
