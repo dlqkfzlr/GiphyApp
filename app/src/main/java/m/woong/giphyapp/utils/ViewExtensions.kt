@@ -2,6 +2,7 @@ package m.woong.giphyapp.utils
 
 import android.view.View
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import m.woong.giphyapp.R
@@ -17,7 +18,8 @@ fun View.showSnackbar(msg: String) {
 }
 
 /* ImageView */
-fun ImageView.showUrl(url: String) {
+@BindingAdapter("url")
+fun ImageView.setUrl(url: String) {
     url.let {
         Glide.with(this)
             .load(url)
