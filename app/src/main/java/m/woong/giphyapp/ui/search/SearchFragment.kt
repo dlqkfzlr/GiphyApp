@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import m.woong.giphyapp.R
 import m.woong.giphyapp.databinding.FragmentSearchBinding
 import m.woong.giphyapp.ui.BaseFragment
+import m.woong.giphyapp.ui.adapter.SearchRvAdapter
 import m.woong.giphyapp.utils.showSnackbar
 
 @AndroidEntryPoint
@@ -21,6 +22,7 @@ class SearchFragment : BaseFragment() {
 
     private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var searchRvAdapter: SearchRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +32,14 @@ class SearchFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.searchVm = searchViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        searchRvAdapter = SearchRvAdapter()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.rvSearch.adapter = searchRvAdapter
 
         searchViewModel.searchClicked.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let {
@@ -43,9 +48,11 @@ class SearchFragment : BaseFragment() {
         })
 
         searchViewModel.searchResponse.observe(viewLifecycleOwner,
-            Observer {
+            Observer { it ->
                 it.getContentIfNotHandled()?.let { response ->
-                    Log.d(TAG, "개수: ${response.data.size}")
+                    Log.d(TAG, "downsized:${response.data[0].images.downsized.url}")
+                    Log.d(TAG, "previewGif:${response.data[0].images.previewGif.url}")
+                    searchRvAdapter.setData(response.data.map { data ->  data.images.previewGif })
                 }
             })
 

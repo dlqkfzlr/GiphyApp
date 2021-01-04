@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import m.woong.giphyapp.data.repos.GiphyRepository
 import m.woong.giphyapp.data.source.remote.model.RemoteSearchGiphyResponse
 import m.woong.giphyapp.data.source.remote.wrapper.ResWrapper
@@ -44,13 +46,14 @@ class SearchViewModel @ViewModelInject constructor(
         if (queryData.value.isNullOrBlank()) return
         viewModelScope.launch {
             val response = giphyRepository.requestToSearchGiphy(queryData.value.toString(), 10, 0)
-            Log.d(SearchFragment.TAG, "response: $response")
+//            Log.d(SearchFragment.TAG, "response: $response")
 
             if (response is ResWrapper.Success) {
                 _searchResponse.value = Event(response.value)
             } else {
                 _networkAvailable.value = Event(false)
             }
+//            withContext(Dispatchers)
         }
     }
 }
