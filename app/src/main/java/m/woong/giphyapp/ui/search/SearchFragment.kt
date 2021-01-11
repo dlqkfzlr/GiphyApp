@@ -1,85 +1,112 @@
 package m.woong.giphyapp.ui.search
 
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import m.woong.giphyapp.R
 import m.woong.giphyapp.databinding.FragmentSearchBinding
 import m.woong.giphyapp.ui.BaseFragment
-import m.woong.giphyapp.ui.adapter.SearchRvAdapter
-import m.woong.giphyapp.utils.showSnackbar
+import m.woong.giphyapp.ui.adapter.SearchAdapter
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment() {
 
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var searchRvAdapter: SearchRvAdapter
+    private val adapter = SearchAdapter()
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        binding.searchVm = searchViewModel
+        binding.searchVm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        searchRvAdapter = SearchRvAdapter()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvSearch.adapter = searchRvAdapter
+        initAdapter()
+        val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
+        search(query)
+        initSearch(query)
+    }
 
-        searchViewModel.searchClicked.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
-                hideSoftKeyboard(binding.etSearch)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(LAST_SEARCH_QUERY, binding.etSearch.text.trim().toString())
+    }
+
+    private fun initAdapter() {
+        binding.rvSearch.adapter = adapter
+    }
+
+    private fun initSearch(query: String) {
+        binding.etSearch.run {
+            this.setText(query)
+
+            this.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    updateGiphyListFromInput()
+                    true
+                } else {
+                    false
+                }
             }
-        })
-
-        searchViewModel.searchResponse.observe(viewLifecycleOwner,
-            Observer { it ->
-                it.getContentIfNotHandled()?.let { response ->
-                    Log.d(TAG, "downsized:${response.data[0].images.downsized.url}")
-                    Log.d(TAG, "previewGif:${response.data[0].images.previewGif.url}")
-                    searchRvAdapter.setData(response.data.map { data ->  data.images.previewGif })
+            this.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    updateGiphyListFromInput()
+                    true
+                } else {
+                    false
                 }
-            })
+            }
 
-        searchViewModel.networkAvailable.observe(viewLifecycleOwner,
-            Observer {
-                it.getContentIfNotHandled()?.let { available ->
-                    if (!available) {
-                        binding.rootSearch.showSnackbar(resources.getString(R.string.network_not_available))
-                    }
-                }
-            })
+            /*lifecycleScope.launch {
+                adapter.loadStateFlow
+                    .distinctUntilChangedBy { it.refresh }
+                    .filter { it.refresh is LoadState.NotLoading }
+                    .collect { binding.list.scrollToPosition(0) }
+            }*/
+        }
 
-        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                searchGiphy(binding.etSearch)
-                true
-            } else {
-                false
+    }
+
+    private fun updateGiphyListFromInput() {
+        binding.etSearch.text.trim().let {
+            if (it.isNotEmpty()) {
+                search(it.toString())
             }
         }
     }
 
-    private fun searchGiphy(et: EditText) {
-        searchViewModel.searchGiphy()
+    private fun search(query: String) {
+        searchJob?.cancel() // 새로운 job을 시작하기 위해 이전 Job을 Cancel함
+        searchJob = lifecycleScope.launch {
+            viewModel.searchGiphy(query).collectLatest { // 결과를 collect해서 람다인자로 넘겨줌
+                adapter.submitData(it)
+            }
+        }
     }
 
     companion object {
         val TAG: String = SearchFragment::class.java.simpleName
+        private const val LAST_SEARCH_QUERY: String = "last_search_query"
+        private const val DEFAULT_QUERY = "Apple"
+
     }
 }
