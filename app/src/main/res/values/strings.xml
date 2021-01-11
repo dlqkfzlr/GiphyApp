@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GiphyApp</string>
-    <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_favorites">Favorites</string>
+    <string name="search_hint">Giphy</string>
     <string name="network_not_available">네트워크 연결을 확인하세요.</string>
 </resources>
