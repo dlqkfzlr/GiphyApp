@@ -15,41 +15,42 @@
         android:layout_height="match_parent"
         tools:context=".ui.search.SearchFragment">
 
-        <EditText
-            android:id="@+id/et_search"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textSize="20sp"
-            android:text="@={searchVm.queryData}"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintEnd_toStartOf="@id/btn_search"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="20sp"
+                android:text="@={searchVm.queryData}" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btn_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:onClick="@{() -> searchVm.searchGiphy()}"
             android:src="@drawable/ic_search_black_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/et_search"
+            app:layout_constraintBottom_toBottomOf="@+id/input_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/iv_search1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_search" />
+            app:layout_constraintTop_toTopOf="@+id/input_layout"
+            app:layout_constraintWidth_percent="0.2" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search"
@@ -59,15 +60,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_search"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout"
             tools:itemCount="10"
-            tools:listitem="@layout/rvitem_search" />
-        <!--<GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_search" />-->
+            tools:listitem="@layout/search_view_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
