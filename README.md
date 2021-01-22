@@ -17,3 +17,4 @@ A sample android app designed by MVVM pattern and composed with various AAC.
 - ViewModel
 - ViewPager2
 - Coroutine
+- Paging
