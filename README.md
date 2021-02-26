@@ -1,6 +1,8 @@
 # GIPHY APP
 
-A sample android app designed by MVVM pattern and composed with various AAC.
+<strike>A sample android app designed by MVVM pattern and composed with various AAC.</strike>
+ <br>Replaced with GiphySample
+ <br>https://github.com/dlqkfzlr/GiphySample
 
 ## Architecture
 
